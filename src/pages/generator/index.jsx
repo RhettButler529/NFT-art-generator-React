@@ -10,6 +10,13 @@ function Generator() {
   return (
     <nav>
       <p>HGeome</p>
+      <Layout dullBackground>
+        <div className={styles.container}>
+        
+        </div>
+
+        <BottomNav />
+      </Layout>
     </nav>
     // <Layout dullBackground>
     //   <div className={styles.container}>

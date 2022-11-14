@@ -1,14 +1,14 @@
-import engine from "@/src/engine";
-import initialData from "@/src/redux/initialStates/data";
+// import engine from "../../engine";
+// import initialData from "../../redux/initialStates/data";
 import React from "react";
-import Input from "../common/Input";
+// import Input from "../common/Input";
 import styles from "./index.module.scss";
 import { useEffect } from "react";
-import { setData as setDataAction } from "@/src/redux/actions/data/data";
+// import { setData as setDataAction } from "@/src/redux/actions/data/data";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import InitialState, { iData } from "@/src/redux/types/initialStates";
+// import InitialState, { iData } from "@/src/redux/types/initialStates";
 
-const typedUseSelectorHook: TypedUseSelectorHook<InitialState> = useSelector;
+const typedUseSelectorHook = useSelector; //: TypedUseSelectorHook<InitialState>
 
 function Data() {
   const dispatch = useDispatch();
@@ -39,7 +39,7 @@ function Data() {
           <Input
             label="Collection name"
             value={data?.name}
-            onChange={({ target: { value } }: any) =>
+            onChange={({ target: { value } }) =>  //: any
               setData({ ...data, name: value })
             }
           />
@@ -48,7 +48,7 @@ function Data() {
             label="Collection description"
             className={styles.container__items__item__textarea}
             value={data?.description}
-            onChange={({ target: { value } }: any) =>
+            onChange={({ target: { value } }) =>  //: any
               setData({ ...data, description: value })
             }
           />
@@ -59,7 +59,7 @@ function Data() {
             label="Width"
             type="number"
             value={data?.width}
-            onChange={({ target: { value } }: any) =>
+            onChange={({ target: { value } }) =>  //: any
               setData({ ...data, width: value })
             }
           />
@@ -67,7 +67,7 @@ function Data() {
             label="Height"
             type="number"
             value={data?.height}
-            onChange={({ target: { value } }: any) =>
+            onChange={({ target: { value } }) =>  //: any
               setData({ ...data, height: value })
             }
           />
@@ -75,7 +75,7 @@ function Data() {
             label="Date"
             type="date"
             value={new Date(data?.date).toISOString().split("T")[0]}
-            onChange={({ target: { value } }: any) =>
+            onChange={({ target: { value } }) =>  //: any
               setData({ ...data, date: value })
             }
           />

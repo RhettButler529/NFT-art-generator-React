@@ -1,16 +1,16 @@
 import React from "react";
 import styles from "./Button.module.scss";
 
-type Props = {
-  title: string;
-  onClick?: () => void;
-  color?: string;
-  disabled?: boolean;
-  loading?: boolean;
-  className?: string;
-};
+// type Props = {
+//   title: string;
+//   onClick?: () => void;
+//   color?: string;
+//   disabled?: boolean;
+//   loading?: boolean;
+//   className?: string;
+// };
 
-const Button: React.FC<Props> = ({
+const Button = ({   //: React.FC<Props>
   title,
   onClick,
   color,

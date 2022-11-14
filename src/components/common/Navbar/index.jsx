@@ -1,22 +1,25 @@
-import Head from "next/head";
-import Link from "next/link";
+// import Head from "next/head";
+// import Link from "next/link";
+import { Link } from "react-router-dom";
 import { config, dom } from "@fortawesome/fontawesome-svg-core";
 import styles from "./Navbar.module.scss";
+import { Helmet } from "react-helmet-async";
 import Button from "../Button";
+
 
 config.autoAddCss = false;
 
-type Props = {
-  title?: string;
-  description?: string;
-  author?: string;
-  className?: string;
-  link?: string;
-  image?: string;
-  dullBackground?: boolean;
-};
+// type Props = {
+//   title?: string;
+//   description?: string;
+//   author?: string;
+//   className?: string;
+//   link?: string;
+//   image?: string;
+//   dullBackground?: boolean;
+// };
 
-const Navbar: React.FunctionComponent<Props> = ({
+const Navbar = ({ //: React.FunctionComponent<Props> 
   title = "NFT generator",
   description = " ",
   author,
@@ -25,7 +28,7 @@ const Navbar: React.FunctionComponent<Props> = ({
 }) => {
   return (
     <>
-      <Head>
+      <Helmet>
         <link rel="shortcut icon" href="/static/images/favicon.ico" />
         <title>{title}</title>
         <meta name="author" content={author} />
@@ -60,55 +63,55 @@ const Navbar: React.FunctionComponent<Props> = ({
             gtag('config', 'G-X35LBBMT97');`,
           }}
         />
-      </Head>
+      </Helmet>
 
       <div className={styles.wrapper}>
         <div className={styles.container}>
-          <Link href="/">
-            <a>
+          <Link to="/home">
+            {/* <a> */}
               <div className={styles.logoWrapper}>
                 <img src="/static/images/logo.svg" className={styles.logo} />
                 <h2>NFTooze</h2>
               </div>
-            </a>
+            {/* </a> */}
           </Link>
 
           <div className={styles.menu}>
             <span className={styles.link}>
-              <Link href="mailto:grace.lungu.bw@gmail.com">
-                <a>
+              <Link to="mailto:grace.lungu.bw@gmail.com" target="_blank">
+                {/* <a> */}
                   <span>
                     <img src="/static/images/gmail.png" />
                   </span>
-                </a>
+                {/* </a> */}
               </Link>
             </span>
 
             <span className={styles.link}>
-              <Link href="https://www.linkedin.com/in/grace-lungu-262306190/">
-                <a target="_blank">
+              <Link to="https://www.linkedin.com/in/grace-lungu-262306190/" target="_blank">
+                {/* <a target="_blank"> */}
                   <span>
                     <img src="/static/images/linkedin.png" />
                   </span>
-                </a>
+                {/* </a> */}
               </Link>
             </span>
 
             <span className={styles.link}>
-              <Link href="https://twitter.com/gracelubw">
-                <a target="_blank">
+              <Link to="https://twitter.com/gracelubw" target="_blank">
+                {/* <a target="_blank"> */}
                   <span>
                     <img src="/static/images/twitter.png" />
                   </span>
-                </a>
+                {/* </a> */}
               </Link>
             </span>
 
             <span className={styles.link}>
-              <Link href="/generator">
-                <a>
+              <Link to="/generator">
+                {/* <a> */}
                   <Button title="GENERATE" className={styles.navbar__button} />
-                </a>
+                {/* </a> */}
               </Link>
             </span>
           </div>

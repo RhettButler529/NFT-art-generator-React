@@ -2,6 +2,7 @@ import * as React from "react";
 import Navbar from "../Navbar";
 
 import styles from "./index.module.scss";
+import { HelmetProvider } from 'react-helmet-async';
 
 // type Props = {
 //   title?: string;
@@ -17,7 +18,7 @@ import styles from "./index.module.scss";
 
 const Layout = ({ //: React.FunctionComponent<Props>
   children,
-  title = "NFTooze, NFT generator",
+  title = "Rhett, NFT generator",
   headerClassName,
   className,
   description,
@@ -27,7 +28,7 @@ const Layout = ({ //: React.FunctionComponent<Props>
   noNavBar,
   dullBackground,
 }) => (
-  <>
+  <HelmetProvider >
     {!noNavBar && (
       <Navbar
         title={title}
@@ -45,7 +46,7 @@ const Layout = ({ //: React.FunctionComponent<Props>
     >
       {children}
     </div>
-  </>
+  </HelmetProvider >
 );
 
 export default Layout;
