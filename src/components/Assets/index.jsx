@@ -91,7 +91,7 @@ function Assets() {
             ref={fileInputRef}
             type="file"
             className={styles.container__top__upload__input}
-            inputProps={{ accept: "image/*" }}
+            inputprops={{ accept: "image/*" }}
             multiple
           />
         </FileDrop>
@@ -120,6 +120,7 @@ function Assets() {
               name={name}
               layerIndex={selectedLayer}
               imageIndex={index}
+              key={index}
             />
           )
         )}

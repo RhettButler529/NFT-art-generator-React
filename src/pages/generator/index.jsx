@@ -9,7 +9,6 @@ import styles from "./index.module.scss";
 function Generator() {
   return (
     <nav>
-      <p>HGeome</p>
       <Layout dullBackground>
         <div className={styles.container}>
           <Data />

@@ -42,6 +42,9 @@ function Generate() {
     web3.collectPayment(coins);
   };
 
+  // console.log("ipf", ipfsURI);
+  // console.log("collectionSize", collectionSize);
+  // console.log("coins", coins);
   return (
     <div className={styles.container} id="generate">
       <Input
@@ -73,7 +76,7 @@ function Generate() {
       </div>
       <Input
         placeholder="amount in eth units"
-        defaultValue="0.005"
+        // defaultValue="0.005"
         value={coins}
         onChange={({ target: { value } }) => setCoins(value)}   //: any
         className={styles.container__input}

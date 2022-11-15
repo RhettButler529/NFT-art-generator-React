@@ -1,6 +1,7 @@
 import { createCanvas, loadImage } from "canvas";
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
+import { Buffer } from "buffer";
 // import metadata from "../constants/metadata.json";
 // import { iData } from "../redux/types/initialStates";
 
@@ -243,18 +244,20 @@ class Engine {
     const attributes = imgs.map((image) => {
       const breakPoints = image.path.split(".");
       dna += breakPoints[breakPoints?.length - 2];
+     // console.log("dna:", dna);
       return {
         trait_type: image.layer,
         value: image?.name?.split(".")[0],
       };
     });
     
+    
     const metadata = {
       name: data.name,
       description: data.description,
       attributes: attributes,
       image: `ipfs://${ipfsURI.replace("ipfs://", "")}/${index}.png`,
-      dna:"sdf", //Buffer.from(`${dna}`).toString("hex"),   ///TODO
+      dna: Buffer.from(`${dna}`).toString("hex"),   
       edition: 1,
       date: data?.date,
       engine: "NFTooze",
