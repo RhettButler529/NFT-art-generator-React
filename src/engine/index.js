@@ -1,37 +1,37 @@
 import { createCanvas, loadImage } from "canvas";
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
-import metadata from "../constants/metadata.json";
-import { iData } from "../redux/types/initialStates";
+// import metadata from "../constants/metadata.json";
+// import { iData } from "../redux/types/initialStates";
 
-export type Size = {
-  width: number;
-  height: number;
-};
+// export type Size = {
+//   width: number;
+//   height: number;
+// };
 
-export type Image = {
-  layer?: string;
-  name: string;
-  path: string;
-  rarity: number;
-};
+// export type Image = {
+//   layer?: string;
+//   name: string;
+//   path: string;
+//   rarity: number;
+// };
 
-export type Layer = {
-  position: number;
-  name: string;
-  images: Array<Image>;
-};
+// export type Layer = {
+//   position: number;
+//   name: string;
+//   images: Array<Image>;
+// };
 
 class Engine {
-  layers: Array<Layer>;
-  size: Size;
-  ctx: any;
-  collectionSize: number;
-  canvas: any;
-  preview: string;
-  jszip: any;
+  // layers: Array<Layer>;
+  // size: Size;
+  // ctx: any;
+  // collectionSize: number;
+  // canvas: any;
+  // preview: string;
+  // jszip: any;
 
-  constructor(size: Size, layers: Array<Layer>, collectionSize: number) {
+  constructor(size, layers, collectionSize) { //: Size : Array<Layer> : number
     this.size = size;
     this.layers = layers;
     this.collectionSize = collectionSize;
@@ -42,24 +42,24 @@ class Engine {
     this.ctx = this.canvas.getContext("2d");
   }
 
-  isValid(): boolean {
+  isValid(){  //: boolean 
     return (
       this.layers.length > 0 &&
       this.layers.every((layer) => layer.images.length > 0)
     );
   }
 
-  setSize(size: Size) {
+  setSize(size) {   //: Size
     this.size = size;
     this.canvas.width = size.width;
     this.canvas.height = size.height;
   }
 
-  setLayers(layers: Array<Layer>) {
+  setLayers(layers) {   //: Array<Layer>
     this.layers = layers;
   }
 
-  setCollectionSize(collectionSize: number) {
+  setCollectionSize(collectionSize) {   //: number
     this.collectionSize = collectionSize;
   }
 
@@ -67,12 +67,12 @@ class Engine {
     this.ctx.clearRect(0, 0, this.size.width, this.size.height);
   }
 
-  async drawImage(imagePath: string, x?: number, y?: number) {
+  async drawImage(imagePath, x, y) {    //: string ?: number ?: number
     const image = await loadImage(imagePath);
     this.ctx.drawImage(image, x || 0, y || 0);
   }
 
-  async generateNFTPreview(images: Array<Image>) {
+  async generateNFTPreview(images) {    //: Array<Image>
     const imgs = Array.isArray(images) ? images : [images];
     this.clearCanvas();
     const drawing = imgs?.map(async ({ path }) => {
@@ -81,7 +81,7 @@ class Engine {
     await Promise.all(drawing);
   }
 
-  async generateNFT(images: Array<Image>, fileName: string) {
+  async generateNFT(images, fileName) {   //: Array<Image>    : string
     const imgs = Array.isArray(images) ? images : [images];
     const drawing = imgs.map(async ({ path }) => {
       return this.drawImage(path);
@@ -90,9 +90,9 @@ class Engine {
     await this.saveFileToZip(`${fileName}.png`, "Collection");
   }
 
-  async saveFileToZip(fileName: string, path: string) {
+  async saveFileToZip(fileName, path) {   //: string  : string
     return await new Promise((resolve) => {
-      this.canvas.toBlob((blob: any) => {
+      this.canvas.toBlob((blob) => {    //: any
         this.jszip.file(`NFTCollection/${path}/${fileName}`, blob);
         this.clearCanvas();
         resolve(true);
@@ -100,23 +100,23 @@ class Engine {
     });
   }
 
-  async saveCanvasFile(fileName: string) {
-    this.canvas.toBlob(async (blob: any) => {
+  async saveCanvasFile(fileName) {    //: string
+    this.canvas.toBlob(async (blob) => {    //: any
       saveAs(blob, `${fileName}`);
     });
   }
 
   async generatePreview() {
     return await new Promise((resolve) => {
-      this.canvas.toBlob(async (blob: any) => {
-        const img = (await this.blobToBase64(blob)) as string;
+      this.canvas.toBlob(async (blob) => {    //: any
+        const img = (await this.blobToBase64(blob));    // as string
         this.preview = img;
         resolve(img);
       });
     });
   }
 
-  blobToBase64(blob: any) {
+  blobToBase64(blob) {    //: any
     const reader = new FileReader();
     reader.readAsDataURL(blob);
     return new Promise((resolve) => {
@@ -126,7 +126,7 @@ class Engine {
     });
   }
 
-  layersCartesianProduct(layers: Array<Layer>): Array<Array<Image>> {
+  layersCartesianProduct(layers) {   //: Array<Layer> : Array<Array<Image>>
     const images = layers
       .map((layer) => ({
         ...layer,
@@ -139,14 +139,14 @@ class Engine {
   }
 
   selectNRandomElements(
-    array: Array<Array<Image>>,
-    n: number
-  ): Array<Array<Image>> {
+    array,    //: Array<Array<Image>>
+    n   //: number
+  ) {   //: Array<Array<Image>>
     const shuffled = array.sort(() => 0.5 - Math.random());
     return shuffled.slice(0, n);
   }
 
-  async generateBannerCollage(blobImage?: boolean) {
+  async generateBannerCollage(blobImage) {    //?: boolean
     if (!this.isValid()) return;
 
     this.jszip = new JSZip();
@@ -176,8 +176,8 @@ class Engine {
     }
 
     return await new Promise((resolve) => {
-      this.canvas.toBlob(async (blob: any) => {
-        const img = (await this.blobToBase64(blob)) as string;
+      this.canvas.toBlob(async (blob) => {    //: any
+        const img = (await this.blobToBase64(blob)) ;   //as string
         this.preview = img;
         console.log(img);
         blobImage ? resolve(blob) : resolve(img);
@@ -195,13 +195,16 @@ class Engine {
 
     this.jszip
       .generateAsync({ type: "blob" })
-      .then((content: any) => {
+      .then((content) => {    //: any
         saveAs(content, "NFTCollectionBanner.zip");
       })
-      .catch((err: any) => console.log(err));
+      .catch((err) => console.log(err));    //: any
   }
 
-  async generateNFTs(data: iData, ipfsURI: string) {
+  async generateNFTs(data, ipfsURI) {   //: iData   : string
+    var startTime = new Date().getTime();
+    console.log(startTime);
+
     this.jszip = new JSZip();
     const cartesianProduct = this.layersCartesianProduct(this.layers);
     const selectedImages = this.selectNRandomElements(
@@ -218,20 +221,24 @@ class Engine {
 
     this.jszip
       .generateAsync({ type: "blob" })
-      .then((content: any) => {
+      .then((content) => {    //: any
         saveAs(content, "NFTCollection.zip");
       })
-      .catch((err: any) => console.log(err));
+      .catch((err) => console.log(err));    //: any
+
+      var endTime = new Date().getTime();
+      console.log(`Call to doSomething took ${endTime - startTime} milliseconds`);
   }
 
   async generateMetaData(
-    data: iData,
-    images: Image[],
-    ipfsURI: string,
-    index: number
+    data,   //: iData
+    images,   //: Image[]
+    ipfsURI,    //: string
+    index   //: number
   ) {
-    const imgs = Array.isArray(images) ? images : [images];
 
+    const imgs = Array.isArray(images) ? images : [images];
+    
     let dna = "";
     const attributes = imgs.map((image) => {
       const breakPoints = image.path.split(".");
@@ -241,17 +248,18 @@ class Engine {
         value: image?.name?.split(".")[0],
       };
     });
-
+    
     const metadata = {
       name: data.name,
       description: data.description,
       attributes: attributes,
       image: `ipfs://${ipfsURI.replace("ipfs://", "")}/${index}.png`,
-      dna: Buffer.from(`${dna}`).toString("hex"),
+      dna:"sdf", //Buffer.from(`${dna}`).toString("hex"),   ///TODO
       edition: 1,
       date: data?.date,
       engine: "NFTooze",
     };
+    
 
     await this.jszip.file(
       `NFTCollection/Collection/${index}.json`,

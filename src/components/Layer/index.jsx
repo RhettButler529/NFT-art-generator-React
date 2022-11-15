@@ -1,19 +1,19 @@
-import { Image } from "@/src/engine";
+import { Image } from "../../engine";
 import {
   deleteImage,
   updateRarity as updateRarityAction,
-} from "@/src/redux/actions/layers/layers";
+} from "../../redux/actions/layers/layers";
 import React from "react";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import styles from "./index.module.scss";
 
-interface Props extends Image {
-  layerIndex: number;
-  imageIndex: number;
-}
+// interface Props extends Image {
+//   layerIndex: number;
+//   imageIndex: number;
+// }
 
-const Layer: React.FC<Props> = ({
+const Layer = ({    //: React.FC<Props>
   path,
   rarity,
   name,
@@ -23,7 +23,7 @@ const Layer: React.FC<Props> = ({
   const dispatch = useDispatch();
   const [itemRarity, setItemRarity] = React.useState(rarity);
 
-  const updateRarity = (amount: number) => {
+  const updateRarity = (amount) => {    //: number
     updateRarityAction(layerIndex, imageIndex, amount)(dispatch);
   };
 

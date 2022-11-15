@@ -1,6 +1,6 @@
-import engine, { Image } from "@/src/engine";
-import { addLayerPath } from "@/src/redux/actions/layers/layers";
-import InitialState from "@/src/redux/types/initialStates";
+import engine from "../../engine";    //, { Image }
+import { addLayerPath } from "../../redux/actions/layers/layers";
+// import InitialState from "@/src/redux/types/initialStates";
 import React from "react";
 import { useRef } from "react";
 import { FileDrop } from "react-file-drop";
@@ -8,23 +8,23 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import Layer from "../Layer";
 import styles from "./index.module.scss";
 
-const typedUseSelectorHook: TypedUseSelectorHook<InitialState> = useSelector;
+const typedUseSelectorHook = useSelector;   //: TypedUseSelectorHook<InitialState>
 
 function Assets() {
   const dispatch = useDispatch();
   const fileInputRef = useRef(null);
-  const [preview, setPreview] = React.useState<string>("");
+  const [preview, setPreview] = React.useState("");   //<string>
   const data = typedUseSelectorHook((state) => state.data);
 
   const state = typedUseSelectorHook((state) => state);
   const { selectedLayer } = state.layers;
 
-  const onFileInputChange = (event: any) => {
+  const onFileInputChange = (event) => {    //: any
     const { files } = event.target;
     onFiles(files);
   };
 
-  const onFileDrop = (files: any) => {
+  const onFileDrop = (files) => {   //: any
     onFiles(files);
   };
 
@@ -32,12 +32,12 @@ function Assets() {
     fileInputRef?.current?.click();
   };
 
-  const onFiles = (files: any) => {
+  const onFiles = (files) => {    //: any
     const filesArray = Object.values(files);
 
-    filesArray.forEach((file: any) => {
+    filesArray.forEach((file) => {    //: any
       const reader = new FileReader();
-      reader.onload = (e: any) => {
+      reader.onload = (e) => {    //: any
         const filePath = e.target.result;
         addLayerPath(selectedLayer, {
           name: file.name,
@@ -113,7 +113,7 @@ function Assets() {
 
       <div className={styles.container__bottom}>
         {state?.layers?.items[selectedLayer]?.images?.map(
-          ({ path, rarity, name }: Image, index) => (
+          ({ path, rarity, name }, index) => (    //: Image
             <Layer
               path={path}
               rarity={rarity}

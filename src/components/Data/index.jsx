@@ -1,10 +1,10 @@
-// import engine from "../../engine";
-// import initialData from "../../redux/initialStates/data";
+import engine from "../../engine";
+import initialData from "../../redux/initialStates/data";
 import React from "react";
-// import Input from "../common/Input";
+import Input from "../common/Input";
 import styles from "./index.module.scss";
 import { useEffect } from "react";
-// import { setData as setDataAction } from "@/src/redux/actions/data/data";
+import { setData as setDataAction } from "../../redux/actions/data/data";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 // import InitialState, { iData } from "@/src/redux/types/initialStates";
 
@@ -12,7 +12,7 @@ const typedUseSelectorHook = useSelector; //: TypedUseSelectorHook<InitialState>
 
 function Data() {
   const dispatch = useDispatch();
-  const [data, setData] = React.useState<iData>(initialData);
+  const [data, setData] = React.useState(initialData);  //<iData>
   const state = typedUseSelectorHook((state) => state);
   const collageData = typedUseSelectorHook((state) => state?.data);
 

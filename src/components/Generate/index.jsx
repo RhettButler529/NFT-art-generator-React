@@ -1,19 +1,20 @@
-import engine from "@/src/engine";
-import InitialState from "@/src/redux/types/initialStates";
-import web3 from "@/src/services/web3";
+import engine from "../../engine";
+// import InitialState from "../../redux/types/initialStates";
+import web3 from "../../services/web3";
 import React, { useEffect } from "react";
 import { TypedUseSelectorHook, useSelector } from "react-redux";
 import Button from "../common/Button";
 import Input from "../common/Input";
 import styles from "./index.module.scss";
+// import { Performance } from "perf_hooks";
 
-const typedUseSelectorHook: TypedUseSelectorHook<InitialState> = useSelector;
+const typedUseSelectorHook = useSelector;   //: TypedUseSelectorHook<InitialState>
 
 function Generate() {
-  const [collectionSize, setCollectionSize] = React.useState<number>(1);
-  const [maxCollectionSize, setMaxCollectionSize] = React.useState<number>(1);
-  const [coins, setCoins] = React.useState<number>(0.005);
-  const [ipfsURI, setIpfsURI] = React.useState<string>("");
+  const [collectionSize, setCollectionSize] = React.useState(1);    //<number>
+  const [maxCollectionSize, setMaxCollectionSize] = React.useState(1);    //<number>
+  const [coins, setCoins] = React.useState(0.005);    //<number>
+  const [ipfsURI, setIpfsURI] = React.useState("");   //<string>
   const data = typedUseSelectorHook((state) => state.data);
   const layers = typedUseSelectorHook((state) => state.layers);
 
@@ -24,10 +25,13 @@ function Generate() {
   }, [layers.items]);
 
   const onGenerate = () => {
+    
     engine.setSize({ width: data?.width || 512, height: data?.height || 512 });
     engine.setLayers(layers.items);
     engine.setCollectionSize(collectionSize || 1);
     engine.generateNFTs(data, ipfsURI);
+    
+   
   };
 
   const onBNB = () => {
@@ -45,7 +49,7 @@ function Generate() {
         label="IPFS URI"
         placeholder="ipfs://..."
         value={ipfsURI}
-        onChange={({ target: { value } }: any) => setIpfsURI(value)}
+        onChange={({ target: { value } }) => setIpfsURI(value)}   //: any
       />
       <div className={styles.container__max}></div>
       <Input
@@ -54,7 +58,7 @@ function Generate() {
         value={collectionSize}
         max={maxCollectionSize}
         type="number"
-        onChange={({ target: { value } }: any) => setCollectionSize(value)}
+        onChange={({ target: { value } }) => setCollectionSize(value)}    //: any
       />
       <div className={styles.container__max}>
         Maximum collection size for provided layers: {maxCollectionSize}
@@ -71,7 +75,7 @@ function Generate() {
         placeholder="amount in eth units"
         defaultValue="0.005"
         value={coins}
-        onChange={({ target: { value } }: any) => setCoins(value)}
+        onChange={({ target: { value } }) => setCoins(value)}   //: any
         className={styles.container__input}
       />
 

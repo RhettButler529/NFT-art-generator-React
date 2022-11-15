@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./index.module.scss";
 
-const Input = ({ label, textarea, ...props }: any) => {
+const Input = ({ label, textarea, ...props }) => {  //: any
   return (
     <div className={styles.container}>
       <div className={styles.container__label}>{label}</div>

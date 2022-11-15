@@ -2,15 +2,16 @@ import React from "react";
 import Input from "../common/Input";
 import styles from "./index.module.scss";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import InitialState from "@/src/redux/types/initialStates";
+// import InitialState from "@/src/redux/types/initialStates";
 import {
   createLayers,
   setSelectedLayer,
   updateLayers,
-} from "@/src/redux/actions/layers/layers";
+} from "../../redux/actions/layers/layers";
 
-const typedUseSelectorHook: TypedUseSelectorHook<InitialState> = useSelector;
+const typedUseSelectorHook = useSelector;   //: TypedUseSelectorHook<InitialState>
 
 const LayersItems = () => {
   const dummyLayer = {
@@ -20,12 +21,13 @@ const LayersItems = () => {
   };
 
   const state = typedUseSelectorHook((state) => state);
+  // console.log(JSON.stringify(state));
   const {
     layers: { items: layers },
   } = state;
   const dispatch = useDispatch();
 
-  const handleOnDragEnd = (result: any) => {
+  const handleOnDragEnd = (result) => {   //: any
     if (!result.destination) return;
 
     const {
@@ -38,7 +40,7 @@ const LayersItems = () => {
     updateLayers(movedLayers)(dispatch);
   };
 
-  const removeLayer = (index: number) => {
+  const removeLayer = (index) => {    //: number
     if (layers.length === 1) {
       return updateLayers([dummyLayer])(dispatch);
     }
@@ -87,7 +89,7 @@ const LayersItems = () => {
                           onFocus={() => setSelectedLayer(index)(dispatch)}
                           onChange={({
                             target: { value },
-                          }: Record<string, any>) =>
+                          }) =>   //: Record<string, any>
                             updateLayers(
                               layers.map((layer, layerIndex) =>
                                 layerIndex === index
