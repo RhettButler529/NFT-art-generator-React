@@ -9,6 +9,7 @@ import {
   createLayers,
   setSelectedLayer,
   updateLayers,
+  removeLayers,
 } from "../../redux/actions/layers/layers";
 
 const typedUseSelectorHook = useSelector;   //: TypedUseSelectorHook<InitialState>
@@ -44,7 +45,8 @@ const LayersItems = () => {
     if (layers.length === 1) {
       return updateLayers([dummyLayer])(dispatch);
     }
-    updateLayers(layers.filter((_i, layerIndex) => layerIndex !== index))(
+    // console.log(JSON.stringify(layers.filter((_i, layerIndex) => layerIndex !== index)));
+    removeLayers(layers.filter((_i, layerIndex) => layerIndex !== index))(
       dispatch
     );
   };

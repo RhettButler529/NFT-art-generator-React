@@ -70,16 +70,25 @@ class Engine {
 
   async drawImage(imagePath, x, y) {    //: string ?: number ?: number
     const image = await loadImage(imagePath);
+    
     this.ctx.drawImage(image, x || 0, y || 0);
+    // console.log("ctx",this.ctx);
   }
 
+
+  ///TODO
   async generateNFTPreview(images) {    //: Array<Image>
     const imgs = Array.isArray(images) ? images : [images];
     this.clearCanvas();
     const drawing = imgs?.map(async ({ path }) => {
       return this.drawImage(path, 0, 0);
     });
-    await Promise.all(drawing);
+    //console.log(drawing);
+    //await Promise.all(drawing);
+    for (let promise of drawing){
+      await promise;
+      console.log("preview", this.preview);
+    }
   }
 
   async generateNFT(images, fileName) {   //: Array<Image>    : string
@@ -111,6 +120,7 @@ class Engine {
     return await new Promise((resolve) => {
       this.canvas.toBlob(async (blob) => {    //: any
         const img = (await this.blobToBase64(blob));    // as string
+        // console.log(img);
         this.preview = img;
         resolve(img);
       });
@@ -227,8 +237,8 @@ class Engine {
       })
       .catch((err) => console.log(err));    //: any
 
-      var endTime = new Date().getTime();
-      console.log(`Call to doSomething took ${endTime - startTime} milliseconds`);
+    var endTime = new Date().getTime();
+    console.log(`Call to doSomething took ${endTime - startTime} milliseconds`);
   }
 
   async generateMetaData(

@@ -7,6 +7,7 @@ import {
   SET_SELECTED_LAYER,
   UPDATE_LAYERS,
   UPDATE_RARITY,
+  REMOVE_LAYER,
 } from "../../constants/layers/layers";
 // import { Image, Layer } from "../../../engine";
 
@@ -20,6 +21,13 @@ export const createLayers = (layer) => (dispatch) => {    //: Layer : Dispatch
 export const updateLayers = (layers) => (dispatch) => { //: Array<Layer>  : Dispatch
   dispatch({
     type: UPDATE_LAYERS,
+    payload: layers,
+  });
+};
+
+export const removeLayers = (layers) => (dispatch) => { //: Array<Layer>  : Dispatch
+  dispatch({
+    type: REMOVE_LAYER,
     payload: layers,
   });
 };

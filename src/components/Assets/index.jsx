@@ -54,6 +54,12 @@ function Assets() {
 
     const randomLayerImages = state.layers.items.map((item) => {
       const randomIndex = Math.floor(Math.random() * item.images.length) + 0;
+      // console.log(item.images[randomIndex]
+      //   ? item.images[randomIndex]
+      //   : {
+      //       path:
+      //         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
+      //     });
       return item.images[randomIndex]
         ? item.images[randomIndex]
         : {
@@ -61,14 +67,15 @@ function Assets() {
               "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=",
           };
     });
-
+    // console.log(randomLayerImages);
     await engine.generateNFTPreview(randomLayerImages);
     const samplePreview = await engine.generatePreview();
     setPreview(samplePreview);
+    // console.log(samplePreview);
   };
 
   const handlePreview = async () => {
-    engine.setSize({ width: data?.width || 512, height: data?.height || 512 });
+    engine.setSize({ width: data?.width || 720, height: data?.height || 720 });
     previewSample();
   };
 
@@ -108,6 +115,7 @@ function Assets() {
             src={preview}
             className={styles.container__top__preview__image}
           />
+          
         </div>
       </div>
 

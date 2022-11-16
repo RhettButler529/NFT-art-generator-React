@@ -26,9 +26,12 @@ function Generate() {
 
   const onGenerate = () => {
     
-    engine.setSize({ width: data?.width || 512, height: data?.height || 512 });
+    engine.setSize({ width: data?.width || 720, height: data?.height || 720 });
     engine.setLayers(layers.items);
     engine.setCollectionSize(collectionSize || 1);
+    // console.log(data);
+    // console.log(layers)//console.log(JSON.stringify(layers));
+
     engine.generateNFTs(data, ipfsURI);
     
    

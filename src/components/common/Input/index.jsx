@@ -13,7 +13,7 @@ const Input = ({ label, textarea, ...props }) => {  //: any
         />
       )}
       {textarea && (
-        <textarea className={`${styles.container__input} ${props.className}`} defaultValue={props.value}>
+        <textarea {...props} className={`${styles.container__input} ${props.className}`} >
           {/* {props.value} */}
         </textarea>
       )}

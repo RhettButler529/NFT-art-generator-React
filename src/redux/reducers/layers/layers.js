@@ -6,6 +6,7 @@ import {
   REMOVE_LAYER_IMAGE,
   UPDATE_RARITY,
   DELETE_IMAGE,
+  REMOVE_LAYER,
 } from "../../constants/layers/layers";
 // import { Layer } from "@/src/engine";
 
@@ -43,6 +44,8 @@ export default (state, { type, payload }) => {   //: state : any
 
     case UPDATE_LAYERS:
       return { items: payload };
+    case REMOVE_LAYER:
+      return { selectedLayer: 0, items: payload };
     case SET_SELECTED_LAYER:
       return { ...state, selectedLayer: payload };
 
