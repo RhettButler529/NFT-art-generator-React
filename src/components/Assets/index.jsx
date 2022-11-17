@@ -75,7 +75,7 @@ function Assets() {
   };
 
   const handlePreview = async () => {
-    engine.setSize({ width: data?.width || 720, height: data?.height || 720 });
+    engine.setSize({ width: data?.width || 1000, height: data?.height || 1000 });
     previewSample();
   };
 

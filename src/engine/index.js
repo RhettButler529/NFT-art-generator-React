@@ -76,31 +76,55 @@ class Engine {
   }
 
 
-  ///TODO
+  
   async generateNFTPreview(images) {    //: Array<Image>
     const imgs = Array.isArray(images) ? images : [images];
     this.clearCanvas();
-    const drawing = imgs?.map(async ({ path }) => {
-      return this.drawImage(path, 0, 0);
-    });
-    //console.log(drawing);
-    //await Promise.all(drawing);
-    for (let promise of drawing){
-      await promise;
-      console.log("preview", this.preview);
+
+    for (let img of imgs){
+      await this.drawImage(img.path);
     }
+    return;
+    // const drawing = imgs?.map(async ({ path }) => {
+    //   return this.drawImage(path, 0, 0);
+    // });
+    //console.log(drawing);
+    // await Promise.all(drawing);
+    /// for (let promise of drawing){
+    ///   await promise;
+    ///   console.log("preview", this.preview);
+    /// }
   }
 
   async generateNFT(images, fileName) {   //: Array<Image>    : string
     const imgs = Array.isArray(images) ? images : [images];
-    const drawing = imgs.map(async ({ path }) => {
-      return this.drawImage(path);
-    });
-    await Promise.all(drawing);
+    // this.clearCanvas();
+    for (let img of imgs){
+      // console.log(img);
+      await this.drawImage(img.path);
+    }
+   
+    // const drawing = imgs.map(async ({ path }) => {
+    //   return this.drawImage(path);
+    // });
+    // await Promise.all(drawing);
     await this.saveFileToZip(`${fileName}.png`, "Collection");
+    // await this.saveCanvasFile(`${fileName}.png`);
   }
 
   async saveFileToZip(fileName, path) {   //: string  : string
+    // var imageData =  await this.ctx.getImageData(0,0,1000,1000);
+    // var buffer = await imageData.data.buffer;
+    // console.log(buffer);
+    // await this.jszip.file(`NFTCollection/${path}/${fileName}`, buffer);
+    // return;
+    return await new Promise((resolve) => {
+      this.canvas.toBlob((blob) => {    //: any
+        this.jszip.file(`NFTCollection/${path}/${fileName}`, blob);
+        this.clearCanvas();
+        resolve(true);
+      });
+    });
     return await new Promise((resolve) => {
       this.canvas.toBlob((blob) => {    //: any
         this.jszip.file(`NFTCollection/${path}/${fileName}`, blob);
@@ -190,7 +214,7 @@ class Engine {
       this.canvas.toBlob(async (blob) => {    //: any
         const img = (await this.blobToBase64(blob)) ;   //as string
         this.preview = img;
-        console.log(img);
+        // console.log(img);
         blobImage ? resolve(blob) : resolve(img);
       });
     });
@@ -213,22 +237,37 @@ class Engine {
   }
 
   async generateNFTs(data, ipfsURI) {   //: iData   : string
-    var startTime = new Date().getTime();
-    console.log(startTime);
-
+    
     this.jszip = new JSZip();
     const cartesianProduct = this.layersCartesianProduct(this.layers);
     const selectedImages = this.selectNRandomElements(
       cartesianProduct,
       this.collectionSize
     );
+    ///TODO
+    var startTime = new Date().getTime();
+    console.log(startTime);
 
-    await Promise.all(
-      selectedImages.map(async (images, index) => {
-        await this.generateNFT(images, `${index}`);
-        await this.generateMetaData(data, images, ipfsURI, index);
-      })
-    );
+    let index = 0;
+    for (let selectedImage of selectedImages){
+      // console.log(selectedImage);
+      // console.log(selectedImage[images]);
+      
+      await this.generateNFT(selectedImage, `${index}`);
+      await this.generateMetaData(data, selectedImage, ipfsURI, index);
+      index++;
+    }
+
+    // await Promise.all(
+    //   selectedImages.map(async (images, index) => {
+    //     console.log(images);
+    //     await this.generateNFT(images, `${index}`);
+    //     await this.generateMetaData(data, images, ipfsURI, index);
+    //   })
+    // );
+
+    var endTime = new Date().getTime();
+    console.log(`Call to doSomething took ${endTime - startTime} milliseconds`);
 
     this.jszip
       .generateAsync({ type: "blob" })
@@ -237,8 +276,7 @@ class Engine {
       })
       .catch((err) => console.log(err));    //: any
 
-    var endTime = new Date().getTime();
-    console.log(`Call to doSomething took ${endTime - startTime} milliseconds`);
+    
   }
 
   async generateMetaData(

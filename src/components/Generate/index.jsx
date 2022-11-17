@@ -26,7 +26,7 @@ function Generate() {
 
   const onGenerate = () => {
     
-    engine.setSize({ width: data?.width || 720, height: data?.height || 720 });
+    engine.setSize({ width: data?.width || 1000, height: data?.height || 1000 });
     engine.setLayers(layers.items);
     engine.setCollectionSize(collectionSize || 1);
     // console.log(data);
