@@ -108,7 +108,12 @@ class Engine {
     //   return this.drawImage(path);
     // });
     // await Promise.all(drawing);
-    await this.saveFileToZip(`${fileName}.png`, "Collection");
+    await this.saveFileToZip(`${fileName}.png`, "Collection"
+  //     ,{
+  //     compression: "STORE"
+  // }
+    
+    );
     // await this.saveCanvasFile(`${fileName}.png`);
   }
 
