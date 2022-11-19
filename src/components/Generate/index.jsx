@@ -25,7 +25,6 @@ function Generate() {
   }, [layers.items]);
 
   const onGenerate = () => {
-    
     engine.setSize({ width: data?.width || 1000, height: data?.height || 1000 });
     engine.setLayers(layers.items);
     engine.setCollectionSize(collectionSize || 1);
@@ -36,6 +35,19 @@ function Generate() {
     
    
   };
+
+  const onGenerateAndUpload = () => {
+    engine.setSize({ width: data?.width || 1000, height: data?.height || 1000 });
+    engine.setLayers(layers.items);
+    engine.setCollectionSize(collectionSize || 1);
+    // console.log(data);
+    // console.log(layers)//console.log(JSON.stringify(layers));
+
+    engine.generateAndUploadNFTs(data, ipfsURI);
+    
+   
+  };
+  
 
   const onBNB = () => {
     web3.collectPayment(coins, true);
@@ -95,8 +107,14 @@ function Generate() {
       </div>
 
       <Button
-        title="Generate collection"
+        title="Generate & Download"
         onClick={onGenerate}
+        disabled={maxCollectionSize < collectionSize || maxCollectionSize === 0}
+      />
+      <br/>
+      <Button
+        title="Generate & Upload  to IPFS"
+        onClick={onGenerateAndUpload}
         disabled={maxCollectionSize < collectionSize || maxCollectionSize === 0}
       />
     </div>

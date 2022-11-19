@@ -2,6 +2,7 @@ import { createCanvas, loadImage } from "canvas";
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
 import { Buffer } from "buffer";
+import axios from 'axios';
 // import metadata from "../constants/metadata.json";
 // import { iData } from "../redux/types/initialStates";
 
@@ -98,7 +99,7 @@ class Engine {
 
   async generateNFT(images, fileName) {   //: Array<Image>    : string
     const imgs = Array.isArray(images) ? images : [images];
-    // this.clearCanvas();
+    this.clearCanvas();
     for (let img of imgs){
       // console.log(img);
       await this.drawImage(img.path);
@@ -108,12 +109,7 @@ class Engine {
     //   return this.drawImage(path);
     // });
     // await Promise.all(drawing);
-    await this.saveFileToZip(`${fileName}.png`, "Collection"
-  //     ,{
-  //     compression: "STORE"
-  // }
-    
-    );
+    await this.saveFileToZip(`${fileName}.png`, "Collection");
     // await this.saveCanvasFile(`${fileName}.png`);
   }
 
@@ -126,14 +122,7 @@ class Engine {
     return await new Promise((resolve) => {
       this.canvas.toBlob((blob) => {    //: any
         this.jszip.file(`NFTCollection/${path}/${fileName}`, blob);
-        this.clearCanvas();
-        resolve(true);
-      });
-    });
-    return await new Promise((resolve) => {
-      this.canvas.toBlob((blob) => {    //: any
-        this.jszip.file(`NFTCollection/${path}/${fileName}`, blob);
-        this.clearCanvas();
+        //this.clearCanvas();
         resolve(true);
       });
     });
@@ -145,7 +134,45 @@ class Engine {
     });
   }
 
+  async pinCanvasToIPFS(fileName){
+    ///TODO
+    const formData = new FormData();
+    this.canvas.toBlob(async (blob) => {
+      // console.log("blob:",blob);
+      // console.log(JSON.stringify(blob));
+      // const file = new File([blob], "1.png");
+      // console.log(file);
+      // console.log(JSON.stringify(file));
+      formData.append("file", blob, `${fileName}.png`);
+      // console.log("formData:", formData);
+
+      try {
+        const resFile = await axios({
+            method: "post",
+            url: "https://api.pinata.cloud/pinning/pinFileToIPFS",
+            data: formData,
+            headers: {
+                'pinata_api_key': '6a5e18bc116ad0bbe4ab',
+                'pinata_secret_api_key': '86be236933b9847e77e129a09fde30d2dcd16e39ecf68b8e5957a9a64dd3514a',
+                "Content-Type": "multipart/form-data"
+            },
+        });
+        const ImgHash = `https://gateway.pinata.cloud/ipfs/${resFile.data.IpfsHash}`;
+        console.log(`${fileName}.png:`, ImgHash); 
+      } catch (error) {
+        console.log('Error uploading file: ', error)
+      }  
+
+    });
+
+
+    ///
+  }
+
   async generatePreview() {
+
+    // await this.pinCanvasToIPFS();
+
     return await new Promise((resolve) => {
       this.canvas.toBlob(async (blob) => {    //: any
         const img = (await this.blobToBase64(blob));    // as string
@@ -240,7 +267,35 @@ class Engine {
       })
       .catch((err) => console.log(err));    //: any
   }
+  
+  async generateAndUploadNFTs(data, ipfsURI) {   //: iData   : string
+    
+    this.jszip = new JSZip();
 
+
+    const cartesianProduct = this.layersCartesianProduct(this.layers);
+    const selectedImages = this.selectNRandomElements(
+      cartesianProduct,
+      this.collectionSize
+    );
+
+    let index = 0;
+    for (let selectedImage of selectedImages){
+      
+      await this.generateNFT(selectedImage, `${index}`);
+      await this.pinCanvasToIPFS(`${index}`);
+      await this.generateMetaData(data, selectedImage, ipfsURI, index);
+      index++;
+    }
+
+    this.jszip
+    .generateAsync({ type: "blob" })
+    .then((content) => {    //: any
+      saveAs(content, "NFTCollection.zip");
+    })
+    .catch((err) => console.log(err));    //: any
+
+  }
   async generateNFTs(data, ipfsURI) {   //: iData   : string
     
     this.jszip = new JSZip();
