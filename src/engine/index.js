@@ -3,6 +3,7 @@ import { saveAs } from "file-saver";
 import JSZip from "jszip";
 import { Buffer } from "buffer";
 import axios from 'axios';
+import {NFTStorage} from "nft.storage";
 // import metadata from "../constants/metadata.json";
 // import { iData } from "../redux/types/initialStates";
 
@@ -42,6 +43,7 @@ class Engine {
 
     this.canvas = createCanvas(size.width, size.height);
     this.ctx = this.canvas.getContext("2d");
+    this.arr = [];
   }
 
   isValid(){  //: boolean 
@@ -134,17 +136,37 @@ class Engine {
     });
   }
 
+  canvasToArr(fileName){
+    this.canvas.toBlob((blob)=>{
+      const file = new File([blob], `${fileName}.png`,{
+        type: blob.type,
+        lastModified: new Date().getTime()
+      });
+      this.arr.push(file);
+
+    });
+  }
+
+  async pinArrToIPFS(){
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDJlYTE2Nzc4MTIyRmJkMzI4MDdDODYzMmM2RDJmY0U1MmJGRDc3MzYiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY2OTAwOTc1MjE5NCwibmFtZSI6InRlc3QifQ.Ilap6RZKFrcF7qcTbi_hPZ5RviY8Ay18hDstEsm1WUE";
+    const storage = new NFTStorage({token});
+    // console.log(this.arr);
+    // console.log(this.arr.length);
+    const cid = await storage.storeDirectory(this.arr);
+    const status = await storage.status(cid);
+    console.log(`Uploaded URL:  https://${cid}.ipfs.nftstorage.link`);
+    this.arr = [];
+  }
+
   async pinCanvasToIPFS(fileName){
     ///TODO
-    const formData = new FormData();
+    
     this.canvas.toBlob(async (blob) => {
-      // console.log("blob:",blob);
-      // console.log(JSON.stringify(blob));
-      // const file = new File([blob], "1.png");
-      // console.log(file);
-      // console.log(JSON.stringify(file));
+     
+      
+
+      const formData = new FormData();
       formData.append("file", blob, `${fileName}.png`);
-      // console.log("formData:", formData);
 
       try {
         const resFile = await axios({
@@ -166,7 +188,6 @@ class Engine {
     });
 
 
-    ///
   }
 
   async generatePreview() {
@@ -271,7 +292,8 @@ class Engine {
   async generateAndUploadNFTs(data, ipfsURI) {   //: iData   : string
     
     this.jszip = new JSZip();
-
+    // var startTime = new Date().getTime();
+    // console.log(startTime);
 
     const cartesianProduct = this.layersCartesianProduct(this.layers);
     const selectedImages = this.selectNRandomElements(
@@ -283,10 +305,14 @@ class Engine {
     for (let selectedImage of selectedImages){
       
       await this.generateNFT(selectedImage, `${index}`);
-      await this.pinCanvasToIPFS(`${index}`);
+      //await this.pinCanvasToIPFS(`${index}`);
+      this.canvasToArr(`${index}`);
       await this.generateMetaData(data, selectedImage, ipfsURI, index);
       index++;
     }
+    
+    // var endTime = new Date().getTime();
+    // console.log(`Call to doSomething took ${endTime - startTime} milliseconds`);
 
     this.jszip
     .generateAsync({ type: "blob" })
@@ -294,6 +320,9 @@ class Engine {
       saveAs(content, "NFTCollection.zip");
     })
     .catch((err) => console.log(err));    //: any
+    
+    console.log("Uploading .......");
+    await this.pinArrToIPFS();
 
   }
   async generateNFTs(data, ipfsURI) {   //: iData   : string
